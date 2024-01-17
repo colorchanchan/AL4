@@ -1,7 +1,8 @@
-﻿#include "Model.h"
+#include "Model.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-class Player {
+
+class Ground {
 public:
 	void Initialize(Model* model);
 

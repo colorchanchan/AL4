@@ -2,7 +2,6 @@
 #include "TextureManager.h"
 #include <cassert>
 
-GameScene::GameScene() {}
 
 GameScene::~GameScene() {}
 
@@ -12,19 +11,30 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
-	textureHandle_ = TextureManager::Load("mario.jpg");
+	worldTransform_.Initialize();
+	viewProjection_.translation_ = {0.0f, 0.0f, 0.0f};
+	viewProjection_.rotation_ = {0.0f, 0.0f, 0.0f};
 
 	viewProjection_.Initialize();
-	// 3Dモデルの生成
-	model_.reset(Model::Create());
 
-	// 自キャラの生成
-	player_ = std::make_unique<Player>();
+	Ground_ = std::make_unique<Ground>();
+	GroundModel_.reset(Model::CreateFromOBJ("ground", true));
+	Ground_->Initialize(GroundModel_.get());
 
-	player_->Initialize(model_.get(), textureHandle_);
+	Skydome_ = std::make_unique<Skydome>();
+	SkydomeModel_.reset(Model::CreateFromOBJ("skydome", true));
+	Skydome_->Initialize(SkydomeModel_.get());
+
+	Player_ = std::make_unique<Player>();
+	PlayerModel_.reset(Model::CreateFromOBJ("float", true));
+	Player_->Initialize(PlayerModel_.get());
 }
 
-void GameScene::Update() { player_->Update(); }
+void GameScene::Update() {
+	Ground_->Update();
+	Skydome_->Update();
+	Player_->Update();
+}
 
 void GameScene::Draw() {
 
@@ -52,7 +62,9 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	player_->Draw(viewProjection_);
+	Skydome_->Draw(viewProjection_);
+	Ground_->Draw(viewProjection_);
+	Player_->Draw(viewProjection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();

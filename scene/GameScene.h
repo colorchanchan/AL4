@@ -3,10 +3,12 @@
 #include "Audio.h"
 #include "DirectXCommon.h"
 #include "Input.h"
-#include "Player.h"
 #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
+#include "Player.h"
+#include "Skydome.h"
+#include "Ground.h"
 #include <memory>
 
 /// <summary>
@@ -45,15 +47,17 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
-	// ビュープロジェクション(共通)
+	WorldTransform worldTransform_;
 	ViewProjection viewProjection_;
-	// モデル
-	// テクスチャハンドル
-	uint32_t textureHandle_ = 0;
-	// 3Dモデル
-	std::unique_ptr<Model> model_;
-	std::unique_ptr<Player> player_;
 
+	std::unique_ptr<Model> GroundModel_;
+	std::unique_ptr<Ground> Ground_;
+
+	std::unique_ptr<Model> SkydomeModel_;
+	std::unique_ptr<Skydome> Skydome_;
+
+	std::unique_ptr<Model> PlayerModel_;
+	std::unique_ptr<Player> Player_;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
